@@ -1,0 +1,30 @@
+body {
+	background: #FFFFFF;
+	background-position: left top;
+	background-repeat: repeat;
+	background-image: url('http://f0.bcbits.com/z/26/78/2678346226-1.jpg');
+	font-family: Verdana;
+}
+
+#centerWrapper {
+	position: static;
+	width: 975px;
+	margin: 0px auto;
+}
+
+#propOpenWrapper {
+	background: #FFFFFF;
+}
+
+.header {
+	background: #383838;
+	text-align: center;
+	padding: 5px;
+	color: white;
+}
+
+h1 {
+	padding: 0;
+	margin: 0;
+	font-size: 25px;
+}
