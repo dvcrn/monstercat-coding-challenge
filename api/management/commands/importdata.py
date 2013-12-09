@@ -18,35 +18,19 @@ class Command(BaseCommand):
     sale_type_list = {}
     sale_period_list = {}
 
-    def get_and_check(self, dictionary, name):
+    def get_and_check(self, dictionary, name, obj):
         try:
             return dictionary[name]
         except KeyError:
-            return False
+            obj.save()
+            dictionary[name] = obj
+            return obj
 
     def create_or_get_album(self, album_name):
-        album = self.get_and_check(self.albums_list, album_name)
-        if album is not False:
-            return album
-
-        album = Album(name=album_name)
-        album.save()
-
-        self.albums_list[album_name] = album
-
-        return album
+        return self.get_and_check(self.albums_list, album_name, Album(name=album_name))
 
     def create_or_get_track_type(self, type_name):
-        ttype = self.get_and_check(self.track_type_list, type_name)
-        if ttype is not False:
-            return ttype
-
-        ttype = TrackType(name=type_name)
-        ttype.save()
-
-        self.track_type_list[type_name] = ttype
-
-        return ttype
+        return self.get_and_check(self.track_type_list, type_name, TrackType(name=type_name))
 
     def create_or_get_song(self, song_name, artist, album, song_type):
         if song_type is 'Track':
@@ -54,80 +38,26 @@ class Command(BaseCommand):
         else:
             song_list = self.album_track_list
 
-        song = self.get_and_check(song_list, song_name)
-        if song is not False:
-            return song
-
         ttype = self.create_or_get_track_type(song_type)
-        track = Track(name=song_name, album=album, artist=artist, track_type=ttype)
-        track.save()
-
-        song_list[song_name] = track
-
-        return track
+        return self.get_and_check(song_list, song_name, Track(name=song_name, album=album, artist=artist, track_type=ttype))
 
     def create_or_get_artist(self, artist_name):
-        artist = self.get_and_check(self.artist_list, artist_name)
-        if artist is not False:
-            return artist
-
-        artist = Artist(name=artist_name)
-        artist.save()
-
-        self.artist_list[artist_name] = artist
-
-        return artist
+        return self.get_and_check(self.artist_list, artist_name, Artist(name=artist_name))
 
     def create_or_get_store(self, store_name):
-        store = self.get_and_check(self.store_list, store_name)
-        if store is not False:
-            return store
-
-        store = Store(name=store_name)
-        store.save()
-
-        self.store_list[store_name] = store
-
-        return store
+        return self.get_and_check(self.store_list, store_name, Store(name=store_name))
 
     def create_or_get_costumer(self, costumer_name):
         if not costumer_name:
             return None
 
-        costumer = self.get_and_check(self.costumer_list, costumer_name)
-        if costumer is not False:
-            return costumer
-
-        costumer = Costumer(name=costumer_name)
-        costumer.save()
-
-        self.costumer_list[costumer_name] = costumer
-
-        return costumer
+        return self.get_and_check(self.costumer_list, costumer_name, Costumer(name=costumer_name))
 
     def create_or_get_sale_type(self, type_name):
-        stype = self.get_and_check(self.sale_type_list, type_name)
-        if stype is not False:
-            return stype
-
-        stype = SaleType(name=type_name)
-        stype.save()
-
-        self.sale_type_list[type_name] = stype
-
-        return stype
+        return self.get_and_check(self.sale_type_list, type_name, SaleType(name=type_name))
 
     def create_or_get_sale_period(self, period_date):
-        speriod = self.get_and_check(self.sale_type_list, period_date)
-        if speriod is not False:
-            return speriod
-
-        speriod = SalePeriod(date=period_date)
-        speriod.save()
-
-        self.sale_type_list[period_date] = speriod
-
-        return speriod
+        return self.get_and_check(self.sale_type_list, period_date, SalePeriod(date=period_date))
 
 
     def handle(self, *args, **options):
